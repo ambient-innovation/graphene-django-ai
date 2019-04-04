@@ -3,7 +3,7 @@ from graphql import GraphQLError
 from promise import is_thenable, Promise
 
 
-class BaseDjangoFormMutation(BaseDjangoFormMutation):
+class BaseAiDjangoFormMutation(BaseDjangoFormMutation):
     class Meta:
         abstract = True
 
@@ -38,3 +38,7 @@ class BaseDjangoFormMutation(BaseDjangoFormMutation):
             return Promise.resolve(result).then(on_resolve)
 
         return on_resolve(result)
+
+
+class DjangoAiModelFormMutation(BaseAiDjangoFormMutation):
+    pass
