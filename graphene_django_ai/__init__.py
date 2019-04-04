@@ -1,11 +1,12 @@
-import graphene_django
-from graphene_django.converter import convert_django_field_with_choices
+import graphene_django as gd
+import graphene_django.converter
 from graphene_django.forms import converter
 
+from .converter import convert_django_field_with_choices
 from .forms.converter import convert_form_field_to_string, convert_form_field_to_choice
 
 # Rewire graphene-django logic to work with our functions
-graphene_django.converter.convert_django_field_with_choices = convert_django_field_with_choices
-graphene_django.forms.converter.convert_form_field_to_string = convert_form_field_to_string
-graphene_django.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
-graphene_django.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
+gd.converter.convert_django_field_with_choices = convert_django_field_with_choices
+gd.forms.converter.convert_form_field_to_string = convert_form_field_to_string
+gd.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
+gd.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
