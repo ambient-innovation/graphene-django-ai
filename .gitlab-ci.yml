@@ -1,0 +1,47 @@
+image: docker:stable
+
+stages:
+- lint
+- build
+- test
+
+# When using dind, it's wise to use the overlays driver for
+# improved performance.
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  DOCKER_HOST: tcp://localhost:2375
+
+services:
+- docker:dind
+
+lint:
+  image: python:3.6
+  stage: lint
+  tags:
+  - rancher2
+  script:
+    - pip install flake8 pep8-naming
+    - flake8
+
+build:
+  stage: build
+  tags:
+    - rancher2
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#using-docker-caching
+    - docker pull $CI_REGISTRY_IMAGE:master || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:master -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+tests:
+  stage: test
+  tags:
+   - rancher2
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $IMAGE_TAG
+    - docker run $IMAGE_TAG python -m unittest discover -v
