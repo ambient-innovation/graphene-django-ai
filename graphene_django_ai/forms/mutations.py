@@ -1,9 +1,12 @@
-from graphene_django.forms.mutation import BaseDjangoFormMutation
+from graphene_django.forms.mutation import DjangoModelFormMutation
 from graphql import GraphQLError
 from promise import is_thenable, Promise
 
 
-class DjangoValidatedModelFormMutation(BaseDjangoFormMutation):
+class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
+    """
+    Takes django ModelForm validations and passes them to GraphQL like any other validation error
+    """
 
     @classmethod
     def mutate(cls, root, info, input):
