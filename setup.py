@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 requirements = [
     'django>=2.0.0',
     'graphene-django==2.2.0',
+    'django-graphql-jwt>=0.2.1',
 ]
 
 setup(
