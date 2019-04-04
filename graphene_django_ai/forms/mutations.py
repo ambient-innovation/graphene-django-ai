@@ -7,6 +7,8 @@ class DjangoValidatedModelFormMutation(DjangoModelFormMutation):
     """
     Takes django ModelForm validations and passes them to GraphQL like any other validation error
     """
+    class Meta:
+        abstract = True
 
     @classmethod
     def mutate(cls, root, info, input):
