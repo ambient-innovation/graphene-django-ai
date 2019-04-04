@@ -96,4 +96,26 @@ class MyMutation(LoginRequiredDjangoModelFormMutation):
 
 ## Run tests locally
 
+**Still W.I.P.!**
+
     python -m unittest discover -v
+
+
+## Publish to PyPI
+
+- Run:
+
+    `python setup.py sdist upload`
+
+If you run into trouble, please create a file in your home directory: ~/.pypirc
+
+```
+[distutils]
+index-servers =
+    pypi
+
+[pypi]
+repository: https://upload.pypi.org/legacy/
+username: 
+password: 
+```
