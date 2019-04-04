@@ -3,7 +3,7 @@ from graphql import GraphQLError
 from promise import is_thenable, Promise
 
 
-class DjangoModelFormMutation(BaseDjangoFormMutation):
+class DjangoValidatedModelFormMutation(BaseDjangoFormMutation):
 
     @classmethod
     def mutate(cls, root, info, input):
