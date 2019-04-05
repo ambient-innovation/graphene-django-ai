@@ -79,11 +79,53 @@ class UserCreateUpdateMutation(LoginRequiredDjangoModelFormMutation):
 # Register new mutation
 class UserMutation(graphene.ObjectType):
     spaces = UserCreateUpdateMutation.Field(description='Create and update users')
- 
  ```
  
  If you register now your `UserMutation` in your schema you have a working model-based and DRY API 
  endpoint. Congratulations!
+
+### DeleteMutation for django-model objects
+
+If you want to delete an object you can easily use the `DeleteMutation` like this:
+
+```python
+from graphene_django_ai.schemes.mutations import DeleteMutation
+from my_app.models import MyModel
+
+class MyModelDeleteMutation(DeleteMutation):
+    class Meta:
+        model = MyModel
+```
+
+If you are using `django-graphql-jwt` authentication you can ensure only logged in access to your delete endpoint like this:
+
+```python
+from graphene_django_ai.schemes.mutations import LoginRequiredDeleteMutation
+from my_app.models import MyModel
+
+class MyModelDeleteMutation(LoginRequiredDeleteMutation):
+    class Meta:
+        model = MyModel
+```
+
+If you need to customize the **validation** or the **base queryset** you can override methods like this:
+
+```python
+from graphene_django_ai.schemes.mutations import LoginRequiredDeleteMutation
+from graphql import GraphQLError
+from my_app.models import MyModel
+
+class MyModelDeleteMutation(LoginRequiredDeleteMutation):
+    class Meta:
+        model = MyModel
+        
+    def validate(self, request):
+        if not request.user.is_superuser:
+            raise GraphQLError("This is only allowed for superusers!")
+    
+    def get_queryset(self, request):
+        return self.model.objects.filter(created_by=request.user)
+```
 
 
 ### JWT secure mutations
@@ -222,6 +264,10 @@ class MyFancyTestCase(GraphQLTestCase):
 
 ## Changelog
 
+* **1.0.3** (2019-04-05)
+    * Added delete mutation for django-model objects `DeleteMutation`
+    * Added delete mutation which ensures JWT authentication
+    
 * **1.0.2** (2019-04-05)
     * Updated deployment documentation
     * Added markdown support to Readme file
