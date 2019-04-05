@@ -264,6 +264,9 @@ class MyFancyTestCase(GraphQLTestCase):
 
 ## Changelog
 
+* **1.0.4** (2019-04-05)
+    * Fixed a bug that a BooleanField from a django form would always be required
+    
 * **1.0.3** (2019-04-05)
     * Added delete mutation for django-model objects `DeleteMutation`
     * Added delete mutation which ensures JWT authentication
