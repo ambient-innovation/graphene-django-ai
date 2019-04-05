@@ -1,16 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import ast
+import re
+
 from setuptools import setup, find_packages
 
+# Dependencies
 requirements = [
     'django>=2.0.0',
     'graphene-django==2.2.0',
     'django-graphql-jwt>=0.2.1',
 ]
 
+# Parse version
+_version_re = re.compile(r"__version__\s+=\s+(.*)")
+with open("graphene_django/__init__.py", "rb") as f:
+    version = str(
+        ast.literal_eval(_version_re.search(f.read().decode("utf-8")).group(1))
+    )
+
 setup(
     name='graphene-django-ai',
-    version='1.0.0',
+    version=version,
     author=u'Ambient Innovation: GmbH',
     author_email='hello@ambient-innovation.com',
     packages=find_packages(),

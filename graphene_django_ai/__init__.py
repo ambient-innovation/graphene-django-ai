@@ -11,3 +11,7 @@ gd.types.convert_django_field_with_choices = convert_django_field_with_choices
 gd.forms.converter.convert_form_field_to_string = convert_form_field_to_string
 gd.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
 gd.forms.converter.convert_form_field_to_choice = convert_form_field_to_choice
+
+
+# Version
+__version__ = "1.0.1"

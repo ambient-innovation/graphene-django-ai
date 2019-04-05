@@ -16,6 +16,11 @@ Refer to the documentation of `django-graphene` base package.
 
 https://github.com/graphql-python/graphene-django/blob/master/README.md
 
+## Interesting to know
+
+Some internal functions of `graphene-django` are monkey-patched inside the `__init__.py`. If you want to take
+a look "under the hood", have a look at this file.
+
 ## Examples
 
 ### GraphQL based on django ModelForms
@@ -93,6 +98,87 @@ class MyMutation(LoginRequiredDjangoModelFormMutation):
     ...
 ```
 
+## Testing GraphQL calls
+
+If you want to unittest your API calls derive your test case from the class `GraphQLTestCase`.
+
+Usage:
+
+```python
+import json
+
+from graphene_django.tests.base_test import GraphQLTestCase
+from my_project.config.schema import schema
+
+class MyFancyTestCase(GraphQLTestCase):
+
+    # Here you need to inject your test case's schema
+    GRAPHQL_SCHEMA = schema
+    
+    def test_some_query(self):
+        response = self.query(
+            '''
+            query {
+                myModel {
+                    id
+                    name
+                }
+            }
+            ''',
+            op_name='myModel'
+        )
+        content = json.loads(response.content)
+        # This validates the status code and if you get errors
+        self.assertResponseNoErrors(response)
+        
+        # Add some more asserts if you like
+        ...
+        
+    def test_some_mutation(self):
+        response = self.query(
+            '''
+            mutation myMutation($input: MyMutationInput!) {
+                myMutation(input: $input) {
+                    my-model {
+                        id
+                        name
+                    }
+                }
+            }
+            ''',
+            op_name='myMutation',
+            input_data={'my_field': 'foo', 'other_field': 'bar'}
+        )
+        # This validates the status code and if you get errors
+        self.assertResponseNoErrors(response)
+        
+        # Add some more asserts if you like
+        ...
+
+    def test_failing_call(self):
+    
+       response = self.query(
+           '''
+           mutation myMutation($input: MyMutationInput!) {
+               myMutation(input: $badInput) {
+                   my-model {
+                       id
+                       name
+                   }
+               }
+           }
+           ''',
+           op_name='myMutation',
+           input_data={'my_field': 'foo', 'other_field': 'bar'}
+       )
+       # This assert tests if the call raised some errors
+       # For example if you want to test if invalid input is handled correctly by your endpoint
+       self.assertResponseHasErrors(response)
+       
+       # Add some more asserts if you like
+       ... 
+
+```
 
 ## Run tests locally
 
@@ -101,7 +187,11 @@ class MyMutation(LoginRequiredDjangoModelFormMutation):
     python -m unittest discover -v
 
 
-## Publish to PyPI
+## Relase a new version
+
+- Update `Changelog` in `Readme.md`
+ 
+- Create pull request / merge to master
 
 - Run:
 
@@ -119,3 +209,12 @@ repository: https://upload.pypi.org/legacy/
 username: 
 password: 
 ```
+
+## Changelog
+
+* **1.0.1** (2019-04-05)
+    * Added documentation about `GraphQLTestCase` 
+    * Put version to variable in `__init__.py`
+
+* **1.0.0** (2019-04-04)
+    * Initial package released
