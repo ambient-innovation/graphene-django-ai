@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 # Dependencies
 requirements = [
     'django>=2.0.0',
-    'graphene-django==2.2.0',
+    'graphene-django>=2.2.0',
     'django-graphql-jwt>=0.2.1',
 ]
 

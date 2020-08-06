@@ -12,7 +12,7 @@ pip install "graphene-django-ai>=1.0.0"
 
 ## Setup
 
-Refer to the documentation of `django-graphene` base package.   
+Refer to the documentation of `django-graphene` base package.
 
 https://github.com/graphql-python/graphene-django/blob/master/README.md
 
@@ -47,9 +47,9 @@ class SpaceForm(forms.ModelForm):
         exclude = []
 ```
 
- We need to create an `ObjectType` which we derive from our model. 
+ We need to create an `ObjectType` which we derive from our model.
  Lives in `my_apps/schemes/schematypes.py`:
- 
+
 ```python
 from graphene_django import DjangoObjectType
 from ..models import User
@@ -59,15 +59,15 @@ class UserType(DjangoObjectType):
         model = User
 ```
 
- Here's the mutation in `my_app/schema/mutations.py`. 
+ Here's the mutation in `my_app/schema/mutations.py`.
  It takes a `ModelForm` (or a non-model form) to derive the validation rules from:
- 
+
  ```python
 import graphene
 from graphene_django_ai.forms.mutations import LoginRequiredDjangoModelFormMutation
 from .schematypes import UserType
 from ..forms import UserForm
- 
+
 
 class UserCreateUpdateMutation(LoginRequiredDjangoModelFormMutation):
     space = graphene.Field(UserType)
@@ -75,13 +75,13 @@ class UserCreateUpdateMutation(LoginRequiredDjangoModelFormMutation):
     class Meta:
         form_class = UserForm
 
- 
+
 # Register new mutation
 class UserMutation(graphene.ObjectType):
     spaces = UserCreateUpdateMutation.Field(description='Create and update users')
  ```
- 
- If you register now your `UserMutation` in your schema you have a working model-based and DRY API 
+
+ If you register now your `UserMutation` in your schema you have a working model-based and DRY API
  endpoint. Congratulations!
 
 ### DeleteMutation for django-model objects
@@ -118,11 +118,11 @@ from my_app.models import MyModel
 class MyModelDeleteMutation(LoginRequiredDeleteMutation):
     class Meta:
         model = MyModel
-        
+
     def validate(self, request):
         if not request.user.is_superuser:
             raise GraphQLError("This is only allowed for superusers!")
-    
+
     def get_queryset(self, request):
         return self.model.objects.filter(created_by=request.user)
 ```
@@ -156,7 +156,7 @@ class MyFancyTestCase(GraphQLTestCase):
 
     # Here you need to inject your test case's schema
     GRAPHQL_SCHEMA = schema
-    
+
     def test_some_query(self):
         response = self.query(
             '''
@@ -172,10 +172,10 @@ class MyFancyTestCase(GraphQLTestCase):
         content = json.loads(response.content)
         # This validates the status code and if you get errors
         self.assertResponseNoErrors(response)
-        
+
         # Add some more asserts if you like
         ...
-        
+
     def test_some_mutation(self):
         response = self.query(
             '''
@@ -193,12 +193,12 @@ class MyFancyTestCase(GraphQLTestCase):
         )
         # This validates the status code and if you get errors
         self.assertResponseNoErrors(response)
-        
+
         # Add some more asserts if you like
         ...
 
     def test_failing_call(self):
-    
+
        response = self.query(
            '''
            mutation myMutation($input: MyMutationInput!) {
@@ -216,9 +216,9 @@ class MyFancyTestCase(GraphQLTestCase):
        # This assert tests if the call raised some errors
        # For example if you want to test if invalid input is handled correctly by your endpoint
        self.assertResponseHasErrors(response)
-       
+
        # Add some more asserts if you like
-       ... 
+       ...
 
 ```
 
@@ -232,12 +232,12 @@ class MyFancyTestCase(GraphQLTestCase):
 ## Relase a new version
 
 - Update `Changelog` in `Readme.md`
- 
+
 - Create pull request / merge to master
 
 - Run:
 
-    * Make sure you have all the required packages installed  
+    * Make sure you have all the required packages installed
     `pip install twine wheel`
     * Create a file in your home directory: `~/.pypirc`
     ```
@@ -245,38 +245,44 @@ class MyFancyTestCase(GraphQLTestCase):
     index-servers=
         pypi
         testpypi
-    
+
     [pypi]
     repository: https://upload.pypi.org/legacy/
     username: ambient-innovation
-    
+
     [testpypi]
     repository: https://test.pypi.org/legacy/
     username: ambient-innovation
     ```
-    * Create distribution  
+    * Create distribution
     `python setup.py sdist bdist_wheel`
-    * Upload to Test-PyPi  
+    * Upload to Test-PyPi
     `twine upload --repository testpypi dist/*`
-    * Check at Test-PyPi if it looks nice  
-    * Upload to real PyPi  
+    * Check at Test-PyPi if it looks nice
+    * Upload to real PyPi
     `twine upload dist/*`
 
 ## Changelog
 
+* **1.0.6** (2002-08-06)
+    * Removed monkey-patched bugfixes from one year ago - hopefully these issues have been resolved by now
+
+* **1.0.5** (2002-08-06)
+    * Extended compat with `graphene-django`
+
 * **1.0.4** (2019-04-05)
     * Fixed a bug that a BooleanField from a django form would always be required
-    
+
 * **1.0.3** (2019-04-05)
     * Added delete mutation for django-model objects `DeleteMutation`
     * Added delete mutation which ensures JWT authentication
-    
+
 * **1.0.2** (2019-04-05)
     * Updated deployment documentation
     * Added markdown support to Readme file
-    
+
 * **1.0.1** (2019-04-05)
-    * Added documentation about `GraphQLTestCase` 
+    * Added documentation about `GraphQLTestCase`
     * Put version to variable in `__init__.py`
 
 * **1.0.0** (2019-04-04)
