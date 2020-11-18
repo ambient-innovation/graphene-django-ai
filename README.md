@@ -2,6 +2,10 @@
 Toolbox for changes to streamline graphene-django
 
 
+**ATTENTION: This package is deprecated. All functionality will live on in the [ai-django-core](https://pypi.org/project/ai-django-core/) package.
+Please install it with the graphql-extension enabled. More details in the changelog.**
+
+
 ## Installation
 
 For installing graphene, just run this command in your shell
@@ -15,11 +19,6 @@ pip install "graphene-django-ai>=1.0.0"
 Refer to the documentation of `django-graphene` base package.
 
 https://github.com/graphql-python/graphene-django/blob/master/README.md
-
-## Interesting to know
-
-Some internal functions of `graphene-django` are monkey-patched inside the `__init__.py`. If you want to take
-a look "under the hood", have a look at this file.
 
 ## Examples
 
@@ -229,7 +228,7 @@ class MyFancyTestCase(GraphQLTestCase):
     python -m unittest discover -v
 
 
-## Relase a new version
+## Release a new version
 
 - Update `Changelog` in `Readme.md`
 
@@ -264,10 +263,16 @@ class MyFancyTestCase(GraphQLTestCase):
 
 ## Changelog
 
-* **1.0.6** (2002-08-06)
+* **1.0.8** (2020-11-18)
+    * Added deprection warning to main init file
+
+* **1.0.7** (2020-11-10)
+    * Deprecated package and moved most code to [ai-django-core](https://pypi.org/project/ai-django-core/)
+
+* **1.0.6** (2020-08-06)
     * Removed monkey-patched bugfixes from one year ago - hopefully these issues have been resolved by now
 
-* **1.0.5** (2002-08-06)
+* **1.0.5** (2020-08-06)
     * Extended compat with `graphene-django`
 
 * **1.0.4** (2019-04-05)

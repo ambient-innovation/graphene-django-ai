@@ -1,3 +1,4 @@
+import warnings
 import graphene_django as gd
 import graphene_django.converter
 from graphene_django.forms import converter
@@ -15,4 +16,7 @@ from .forms.converter import convert_form_field_to_string, convert_form_field_to
 
 
 # Version
-__version__ = "1.0.6"
+__version__ = "1.0.8"
+
+# Deprecation warning
+warnings.warn('This module is deprecated. Please use ai-django-core instead.', DeprecationWarning)
